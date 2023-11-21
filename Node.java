@@ -19,6 +19,10 @@ public class Node {
         this.next = next;
     }
 
+    public Node getPrevious() {
+        return previous;
+    }
+
     public void setPrevious(Node previous) {
         this.previous = previous;
     }
