@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
 public class PrefixToInfix {
-
+    //maybe going to a main method
     Scanner sc = new Scanner(System.in);
     String prefix = sc.nextLine();
-
+    //-
     public PrefixToInfix(String prefix) {
         this.prefix = prefix;
     }
