@@ -5,6 +5,7 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
 
     private Node head = null;
     private Node tail = null;
+    private int count = 0;
 
     public StringDoubleEndedQueueImpl() {
     }
@@ -22,10 +23,12 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         if (isEmpty()) {
             head = n;
             tail = n;
+            count = 1;
         } else {
             n.setNext(head);
             head = n;
             n.setPrevious(null);
+            count++;
         }
     }
 
@@ -37,8 +40,10 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
             head = head.getNext();
             if (head == null) {
                 tail = null;
+                count = 0;
             } else {
                 head.setPrevious(null);
+                count--;
             }
             return n.getItem();
         }
@@ -49,10 +54,12 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         if (isEmpty()) {
             head = n;
             tail = n;
+            count = 1;
         } else {
             tail.setNext(n);
             n.setPrevious(tail);
             tail = n;
+            count++;
         }       
     }
 
@@ -64,8 +71,10 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
             tail = tail.getPrevious();
             if (tail == null) {
                 head = null;
+                count = 0;
             } else {
                 tail.setNext(null);
+                count--;
             }
             return n.getItem();
         }
@@ -96,12 +105,6 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
     }
 
     public int size() {
-        int count = 0;
-        Node n = head;
-        while (n != null) {
-            count++;
-            n = n.getNext();
-        }
         return count;
     }
 
