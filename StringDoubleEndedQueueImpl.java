@@ -7,9 +7,6 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
     private Node tail = null;
     private int count = 0;
 
-    public StringDoubleEndedQueueImpl() {
-    }
-
     public boolean isEmpty() {
         if(head == null) {
             return true;
