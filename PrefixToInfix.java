@@ -31,33 +31,40 @@ public class PrefixToInfix {
         return flag;
     }
 
+    private void clear() {
+        StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl();
+        while (!queue.isEmpty()) {
+            queue.removeFirst();
+        }
+    }
+
     public String convert() {
+        clear();
+
         String[] prefixArray = prefix.split("");
+
         if (isValid(prefixArray)) {
             StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl();
+
             for (int i = 0; i < prefixArray.length; i++) {
                 queue.addLast(prefixArray[i]);
             }
+
             String infix = "";
-            while (queue.size() > 1) {
-                String item = queue.removeFirst();
-                if (isOperator(item) && !isOperator(queue.getFirst())) {
+            for(int i = prefix.length() - 1; i >= 0; i--) {
+                String item = prefixArray[i];
+
+                if (isOperator(item)) {
                     String operand1 = queue.removeFirst();
                     String operand2 = queue.removeFirst();
-                    infix = infix + "(" + operand1 + item + operand2 + ")";
+                    infix = "(" + operand1 + item + operand2 + ")";
+                    queue.addFirst(infix);
                 } else {
-                    String temp = queue.removeFirst();
-                    String operand1 = queue.removeFirst();
-                    String operand2 = queue.removeFirst();
-                    infix = infix + "(" + operand1 + temp + operand2 + ")" + item;
+                    queue.addFirst(item);
                 }
             }
 
-            if(queue.size() == 1) {
-                infix = infix + queue.removeFirst();
-            }
-
-            return infix;
+            return queue.removeFirst();
         } else {
             return "Invalid prefix expression";
         }
