@@ -41,16 +41,23 @@ public class PrefixToInfix {
             String infix = "";
             while (queue.size() > 1) {
                 String item = queue.removeFirst();
-                if (isOperator(item)) {
+                if (isOperator(item) && !isOperator(queue.getFirst())) {
                     String operand1 = queue.removeFirst();
                     String operand2 = queue.removeFirst();
-                    infix = "(" + operand1 + item + operand2 + ")";
-                    queue.addFirst(infix);
+                    infix = infix + "(" + operand1 + item + operand2 + ")";
                 } else {
-                    queue.addLast(item);
+                    String temp = queue.removeFirst();
+                    String operand1 = queue.removeFirst();
+                    String operand2 = queue.removeFirst();
+                    infix = infix + "(" + operand1 + temp + operand2 + ")" + item;
                 }
             }
-            return queue.getFirst();
+
+            if(queue.size() == 1) {
+                infix = infix + queue.removeFirst();
+            }
+
+            return infix;
         } else {
             return "Invalid prefix expression";
         }
