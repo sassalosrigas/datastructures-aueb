@@ -1,3 +1,10 @@
+/*
+ * course: Data Structures (INF231) (aueb, Informatics, 2023)
+ * file: StringDoubleEndedQueueImpl.java
+ * authors: Rigas Sassalos (3220178), Evgenia Lazana (3220***)
+ */
+
+
 import java.io.PrintStream;
 import java.util.NoSuchElementException;
 

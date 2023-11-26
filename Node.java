@@ -1,3 +1,10 @@
+/*
+ * course: Data Structures (INF231) (aueb, Informatics, 2023)
+ * file: Node.java
+ * authors: Rigas Sassalos (3220178), Evgenia Lazana (3220***)
+ */
+
+
 public class Node {
     protected String item;
     protected Node next = null;
