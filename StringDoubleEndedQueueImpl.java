@@ -14,7 +14,7 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
     private Node tail = null;
     private int count = 0;
 
-    public boolean isEmpty() {
+    public boolean isEmpty() { // checks if the queue is empty
         if(head == null) {
             return true;
         } else {
@@ -22,34 +22,34 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         }
     }
 
-    public void addFirst(String item) {
+    public void addFirst(String item) { // adds an item at the front of the queue
         Node n = new Node(item);
         if (isEmpty()) {
             head = n;
             tail = n;
             count = 1;
         } else {
-            n.setNext(head);
+            n.setNext(head); // sets the next node of the new head to the previous head
             head = n;
-            n.setPrevious(null);
+            n.setPrevious(null); // sets the previous node of the new head to null
             count++;
         }
     }
 
-    public String removeFirst() throws NoSuchElementException {
+    public String removeFirst() throws NoSuchElementException { // removes and returns the item at the front of the queue
         if (isEmpty()) {
             throw new NoSuchElementException();
         } else {
             Node n = head;
             head = head.getNext();
-            if (head == null) {
+            if (head == null) { // if there is only one node in the queue
                 tail = null;
                 count = 0;
             } else {
-                head.setPrevious(null);
+                head.setPrevious(null); // sets the previous node of the new head to null
                 count--;
             }
-            return n.getItem();
+            return n.getItem(); // returns the item of the removed node
         }
     }
 
@@ -60,8 +60,8 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
             tail = n;
             count = 1;
         } else {
-            tail.setNext(n);
-            n.setPrevious(tail);
+            tail.setNext(n); // sets the next node of the previous tail to the new tail
+            n.setPrevious(tail); // sets the previous node of the new tail to the previous tail
             tail = n;
             count++;
         }       
@@ -72,19 +72,19 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
             throw new NoSuchElementException();
         } else {
             Node n = tail;
-            tail = tail.getPrevious();
-            if (tail == null) {
+            tail = tail.getPrevious(); 
+            if (tail == null) { // if there is only one node in the queue
                 head = null;
                 count = 0;
             } else {
-                tail.setNext(null);
+                tail.setNext(null); // sets the next node of the new tail to null
                 count--;
             }
-            return n.getItem();
+            return n.getItem(); // returns the item of the removed node
         }
     }
 
-    public String getFirst() throws NoSuchElementException {
+    public String getFirst() throws NoSuchElementException { // returns the item at the front of the queue
         if (isEmpty()) {
             throw new NoSuchElementException();
         } else {
@@ -92,7 +92,7 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         }
     }
 
-    public String getLast() throws NoSuchElementException {
+    public String getLast() throws NoSuchElementException { // returns the item at the end of the queue
         if (isEmpty()) {
             throw new NoSuchElementException();
         } else {
@@ -100,7 +100,7 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         }
     }
 
-    public void printQueue(PrintStream stream) {
+    public void printQueue(PrintStream stream) { // prints the items of the queue
         Node n = head;
         while (n != null) {
             stream.println(n.getItem());
@@ -108,7 +108,7 @@ public class StringDoubleEndedQueueImpl implements StringDoubleEndedQueue {
         }
     }
 
-    public int size() {
+    public int size() { // returns the size of the queue
         return count;
     }
 

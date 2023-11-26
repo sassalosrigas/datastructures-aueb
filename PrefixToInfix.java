@@ -10,11 +10,11 @@ import java.util.Scanner;
 public class PrefixToInfix {
     private String prefix;
 
-    public PrefixToInfix(String prefix) {
+    public PrefixToInfix(String prefix) { // constructor
         this.prefix = prefix;
     }
 
-    public boolean isOperator(String item) {
+    public boolean isOperator(String item) { // checks if the item is an operator
         switch (item) {
             case "+":
             case "-":
@@ -25,7 +25,7 @@ public class PrefixToInfix {
         return false;
     }
 
-    public boolean isValid(String[] prefixArray) {
+    public boolean isValid(String[] prefixArray) { // checks if the prefix expression is valid
         boolean flag = false;
         if (isOperator(prefixArray[0])) {
             flag = true;
@@ -38,23 +38,23 @@ public class PrefixToInfix {
         return flag;
     }
 
-    private void clear() {
+    private void clear() { // clears the queue
         StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl();
         while (!queue.isEmpty()) {
             queue.removeFirst();
         }
     }
 
-    public String convert() {
+    public String convert() { // converts the prefix expression to infix
         clear();
 
-        String[] prefixArray = prefix.split("");
+        String[] prefixArray = prefix.split(""); // splits the prefix expression into an array
 
         if (isValid(prefixArray)) {
-            StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl();
+            StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl(); // creates a queue
 
             for (int i = 0; i < prefixArray.length; i++) {
-                queue.addLast(prefixArray[i]);
+                queue.addLast(prefixArray[i]); // adds the items of the array to the queue
             }
 
             String infix = "";
@@ -65,13 +65,13 @@ public class PrefixToInfix {
                     String operand1 = queue.removeFirst();
                     String operand2 = queue.removeFirst();
                     infix = "(" + operand1 + item + operand2 + ")";
-                    queue.addFirst(infix);
+                    queue.addFirst(infix); // adds the infix expression to the front of the queue
                 } else {
-                    queue.addFirst(item);
+                    queue.addFirst(item); // adds the item to the front of the queue
                 }
             }
 
-            return queue.removeFirst();
+            return queue.removeFirst(); // returns the infix expression
         } else {
             return "Invalid prefix expression";
         }
