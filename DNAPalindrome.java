@@ -4,6 +4,7 @@
  * authors: Rigas Sassalos (3220178), Evgenia Lazana (3220104)
  */
 
+
 import java.util.Scanner;
 
 public class DNAPalindrome {
@@ -18,24 +19,21 @@ public class DNAPalindrome {
         String[] dnaArray = dna.split(""); // splits the dna sequence into an array
         StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl(); // creates a queue
 
-        String reverse = "";
         for (int i = 0; i < dnaArray.length; i++) {
-
-            String complementaryNucleotide = "";
-
-            if (dnaArray[i].equals("A")) {
-                complementaryNucleotide = "T";
+            if (dnaArray[i].equals("A")) { // adds the complementary nucleotide to the queue
+                queue.addLast("T");
             } else if (dnaArray[i].equals("T")) {
-                complementaryNucleotide = "A";
+                queue.addLast("A");
             } else if (dnaArray[i].equals("C")) {
-                complementaryNucleotide = "G";
+                queue.addLast("G");
             } else if (dnaArray[i].equals("G")) {
-                complementaryNucleotide = "C";
+                queue.addLast("C");
             }
+        }
 
-            queue.addLast(complementaryNucleotide);
-
-            reverse = complementaryNucleotide + reverse;
+        String reverse = "";
+        while (!queue.isEmpty()) {
+            reverse += queue.removeLast(); // adds the items of the queue to a string from the end to the front
         }
 
         if (dna.equals(reverse)) { // checks if the dna sequence is a palindrome
