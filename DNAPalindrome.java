@@ -4,7 +4,6 @@
  * authors: Rigas Sassalos (3220178), Evgenia Lazana (3220104)
  */
 
-
 import java.util.Scanner;
 
 public class DNAPalindrome {
@@ -19,21 +18,24 @@ public class DNAPalindrome {
         String[] dnaArray = dna.split(""); // splits the dna sequence into an array
         StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl(); // creates a queue
 
-        for (int i = 0; i < dnaArray.length; i++) {
-            if (dnaArray[i].equals("A")) { // adds the complementary nucleotide to the queue
-                queue.addLast("T");
-            } else if (dnaArray[i].equals("T")) {
-                queue.addLast("A");
-            } else if (dnaArray[i].equals("C")) {
-                queue.addLast("G");
-            } else if (dnaArray[i].equals("G")) {
-                queue.addLast("C");
-            }
-        }
-
         String reverse = "";
-        while (!queue.isEmpty()) {
-            reverse += queue.removeLast(); // adds the items of the queue to a string from the end to the front
+        for (int i = 0; i < dnaArray.length; i++) {
+
+            String complementaryNucleotide = "";
+
+            if (dnaArray[i].equals("A")) {
+                complementaryNucleotide = "T";
+            } else if (dnaArray[i].equals("T")) {
+                complementaryNucleotide = "A";
+            } else if (dnaArray[i].equals("C")) {
+                complementaryNucleotide = "G";
+            } else if (dnaArray[i].equals("G")) {
+                complementaryNucleotide = "C";
+            }
+
+            queue.addLast(complementaryNucleotide);
+
+            reverse = complementaryNucleotide + reverse;
         }
 
         if (dna.equals(reverse)) { // checks if the dna sequence is a palindrome
