@@ -20,14 +20,19 @@ public class DNAPalindrome {
         StringDoubleEndedQueueImpl queue = new StringDoubleEndedQueueImpl(); // creates a queue
 
         for (int i = 0; i < dnaArray.length; i++) {
-            if (dnaArray[i].equals("A")) { // adds the complementary nucleotide to the queue
-                queue.addLast("T");
-            } else if (dnaArray[i].equals("T")) {
-                queue.addLast("A");
-            } else if (dnaArray[i].equals("C")) {
-                queue.addLast("G");
-            } else if (dnaArray[i].equals("G")) {
-                queue.addLast("C");
+            switch (dnaArray[i]) { // checks if the dna sequence is valid
+                case "A":
+                    queue.addLast("T");
+                    break;
+                case "T":
+                    queue.addLast("A");
+                    break;
+                case "C":
+                    queue.addLast("G");
+                    break;
+                case "G":
+                    queue.addLast("C");
+                    break;
             }
         }
 
