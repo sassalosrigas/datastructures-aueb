@@ -1,7 +1,7 @@
 class LargeDepositor {
     private int AFM;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private double savings;
     private double taxedIncome;
 
@@ -25,15 +25,15 @@ class LargeDepositor {
         this.taxedIncome = taxedIncome; 
     }
 
-    LargeDepositor(int AFM, String first_name, String last_name, double savings, double taxedIncome) {
+    LargeDepositor(int AFM, String firstName, String lastName, double savings, double taxedIncome) {
         this.AFM = AFM;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.savings = savings;
         this.taxedIncome = taxedIncome;
     }
 
     public String toString() {
-        return String.format("%d %s %s %.2f %.2f", AFM, first_name, last_name, savings, taxedIncome);
+        return String.format("%d %s %s %.2f %.2f", AFM, firstName, lastName, savings, taxedIncome);
     }
 }
