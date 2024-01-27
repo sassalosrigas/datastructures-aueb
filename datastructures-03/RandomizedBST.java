@@ -1,13 +1,13 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.tree.TreeNode;
 
 class RandomizedBST implements TaxEvasionInterface {
     private class TreeNode {
+        public TreeNode(LargeDepositor item) {
+            this.item = item;
+            this.N = 1;
+        }
         LargeDepositor item;
         TreeNode left;
         TreeNode right;
@@ -16,18 +16,7 @@ class RandomizedBST implements TaxEvasionInterface {
 
     private TreeNode root;
 
-    private int size(TreeNode node) {
-        if (node == null) return 0;
-        return node.N;
-    }
-
-    private void updateSize(TreeNode node) {
-        if (node != null){
-            node.N = size(node.left) + size(node.right) + 1;
-        }
-    }
-
-    void insert(LargeDepositor item) {
+    public void insert(LargeDepositor item) {
         root = insert(root, item);
     }
 
@@ -41,8 +30,8 @@ class RandomizedBST implements TaxEvasionInterface {
             System.exit(1);
         }
 
-        if (Math.random() * (size(node) + 1) < 1.0) {
-            return insertAsRoot(item, node);
+        if (Math.random() * (size(node) + 1) <  1.0) {
+            return insertAtRoot(node, item);
         }
 
         if (item.key() < node.item.key()) {
@@ -55,17 +44,54 @@ class RandomizedBST implements TaxEvasionInterface {
         return node;
     }
 
-    private TreeNode insertAsRoot(LargeDepositor item, Node h) {
-        TreeNode x = new TreeNode(item);
-        x.left = h;
-        x.right = h.right;
-        h.right = null;
+    private TreeNode insertAtRoot(TreeNode node, LargeDepositor item) {
+        if (node == null) {
+            return new TreeNode(item);
+        }
+
+        if (item.key() < node.item.key()) {
+            node.left = insertAtRoot(node.left, item);
+            node = rotateRight(node);
+        } else {
+            node.right = insertAtRoot(node.right, item);
+            node = rotateLeft(node);
+        }
+
+        return node;
+    }
+
+    private int size(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return node.N;
+    }
+
+    private void updateSize(TreeNode node) {
+        node.N = size(node.left) + size(node.right) + 1;
+    }
+
+    private TreeNode rotateRight(TreeNode node) {
+        TreeNode x = node.left;
+        node.left = x.right;
+        x.right = node;
+        updateSize(node);
         updateSize(x);
         return x;
     }
 
-    void load(String filename) {
-        Scanner scanner = new Scanner(new File(filename));
+    private TreeNode rotateLeft(TreeNode node) {
+        TreeNode x = node.right;
+        node.right = x.left;
+        x.left = node;
+        updateSize(node);
+        updateSize(x);
+        return x;
+    }
+
+    public void load(String filename) {
+        Scanner scanner = new Scanner(filename);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] tokens = line.split(" ");
@@ -74,58 +100,85 @@ class RandomizedBST implements TaxEvasionInterface {
             String lastName = tokens[2];
             double savings = Double.parseDouble(tokens[3]);
             double taxedIncome = Double.parseDouble(tokens[4]);
-            LargeDepositor item = new LargeDepositor(AFM, firstName, lastName, savings, taxedIncome);
-            insert(item);
+            LargeDepositor depositor = new LargeDepositor(AFM, firstName, lastName, savings, taxedIncome);
+            insert(depositor);
         }
-        
     }
 
-    void updateSavings(int AFM, double savings) {
+    public void updateSavings(int AFM, double savings) {
         LargeDepositor depositor = searchByAFM(AFM);
-        if (depositor != null) {
-            depositor.setSavings(savings);
+        if (depositor == null) {
+            System.out.println("Error: Depositor with AFM " + AFM + " does not exist.");
+            System.exit(1);
+        } else {
+            depositor.setSavings(depositor.getSavings()+savings);
         }
     }
 
-    LargeDepositor searchByAFM(int AFM) {
-        return searchByAFM(root, AFM);
-    }  
-
-    private LargeDepositor searchByAFM(TreeNode node, int AFM) {
-        while (node!=null) {
-            if (AFM < node.item.key()) {
-                node = node.left;
-            } else if (AFM > node.item.key()) {
-                node = node.right;
-            } else {
-                return node.item;
-            }
+    public LargeDepositor searchByAFM(int AFM) {
+        TreeNode node = searchByAFM(root, AFM);
+        if (node == null) {
+            System.out.println("Error: Depositor with AFM " + AFM + " does not exist.");
+            return null;
+        } else {
+            System.out.println("Depositor with AFM " + AFM + " found.");
+            System.out.println(node.item.getFirstName() + " " + node.item.getLastName() + " " + node.item.getSavings() + " " + node.item.getTaxedIncome());
+            return node.item;
         }
     }
 
-    List searchByLastName(String lastName) {
-        List<LargeDepositor> result = new ArrayList<>();
-        searchByLastName(root, lastName, result);
-        return result;
-    }
+    private TreeNode searchByAFM(TreeNode node, int AFM) {
+        if (node == null) {
+            return null;
+        }
 
-    private void searchByLastName(TreeNode node, String lastName, List<LargeDepositor> result) {
-        if (node != null) {
-            searchByLastName(node.left, lastName, result);
-            if (node.item.getLastName().equals(lastName)) {
-                result.add(node.item);
-            }
-            searchByLastName(node.right, lastName, result);
+        if (AFM == node.item.key()) {
+            return node;
+        }
+
+        if (AFM < node.item.key()) {
+            return searchByAFM(node.left, AFM);
+        } else {
+            return searchByAFM(node.right, AFM);
         }
     }
 
-    void remove(int AFM) {
+    public List searchByLastName(String lastName) {
+        List list = new List();
+        searchByLastName(root, lastName, list);
+        if (list.isEmpty()) {
+            System.out.println("Error: Depositor with last name " + lastName + " does not exist.");
+        } else {
+            System.out.println("Depositors with last name " + lastName + " found.");
+            list.print();
+        }
+        return list;
+    }
+
+    private void searchByLastName(TreeNode node, String lastName, List list) {
+        if (node == null) {
+            return;
+        }
+
+        if (lastName.compareTo(node.item.getLastName()) < 0) {
+            searchByLastName(node.left, lastName, list);
+        } else if (lastName.compareTo(node.item.getLastName()) > 0) {
+            searchByLastName(node.right, lastName, list);
+        } else {
+            list.add(node.item);
+            searchByLastName(node.left, lastName, list);
+            searchByLastName(node.right, lastName, list);
+        }
+    }
+
+    public void remove(int AFM) {
         root = remove(root, AFM);
     }
 
     private TreeNode remove(TreeNode node, int AFM) {
         if (node == null) {
-            return null;
+            System.out.println("Error: Depositor with AFM " + AFM + " does not exist.");
+            System.exit(1);
         }
 
         if (AFM < node.item.key()) {
@@ -133,85 +186,45 @@ class RandomizedBST implements TaxEvasionInterface {
         } else if (AFM > node.item.key()) {
             node.right = remove(node.right, AFM);
         } else {
-            node = join(node.left, node.right);
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            } else {
+                TreeNode x = node;
+                node = min(x.right);
+                node.right = deleteMin(x.right);
+                node.left = x.left;
+            }
         }
+
         updateSize(node);
         return node;
     }
 
-    private TreeNode join(TreeNode left, TreeNode right) {
-        if (left == null) {
-            return right;
-        }
-        if (right == null) {
-            return left;
-        }
-
-        if (Math.random() * (size(left) + size(right)) < size(left)) {
-            left.right = join(left.right, right);
-            updateSize(left);
-            return left;
+    private TreeNode min(TreeNode node) {
+        if (node.left == null) {
+            return node;
         } else {
-            right.left = join(left, right.left);
-            updateSize(right);
-            return right;
+            return min(node.left);
         }
     }
 
-    double getMeanSavings() {
-        if (root == null) {
-            return 0.0;
+    private TreeNode deleteMin(TreeNode node) {
+        if (node.left == null) {
+            return node.right;
         } else {
-            return getSumSavings(root) / root.N;
+            node.left = deleteMin(node.left);
+            updateSize(node);
+            return node;
         }
     }
 
-    private double getSumSavings(TreeNode node) {
-        if (node == null) {
-            return 0.0;
-        } else {
-            return getSumSavings(node.left) + getSumSavings(node.right) + node.item.getSavings();
-        }
-    }
+    
 
-    void printΤopLargeDepositors(int k) {
-        List<LargeDepositor> result = new ArrayList<>();
-        printΤopLargeDepositors(root, result);
-        Collections.sort(result, (a, b) -> Double.compare(b.getSavings(), a.getSavings()));
+    
 
-        System.out.println("Top " + k + " large depositors:");
-        for (int i = 0; i < k; i++) {
-            System.out.println(result.get(i));
-        }
-    }
 
-    private void printΤopLargeDepositors(TreeNode node, List<LargeDepositor> result) {
-        if (node != null) {
-            printΤopLargeDepositors(node.left, result);
-            result.add(node.item);
-            printΤopLargeDepositors(node.right, result);
-        }
-    }
 
-    void printByAFM() {
-        printByAFM(root);
-    }
-
-    private void printByAFM(TreeNode node) {
-        if (node != null) {
-            printByAFM(node.left);
-            System.out.println(node.item);
-            printByAFM(node.right);
-        }
-    }
-
-    public static void main(String[] args) {
-        RandomizedBST tree = new RandomizedBST();
-        tree.load("datastructures-03/large-depositors.txt");
-        tree.printByAFM();
-        System.out.println("Mean savings: " + tree.getMeanSavings());
-        tree.printΤopLargeDepositors(10);
-        tree.updateSavings(123456789, 1000000.0);
-        tree.printΤopLargeDepositors(10);
-    }
+    
 }

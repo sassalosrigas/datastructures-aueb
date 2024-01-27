@@ -9,6 +9,14 @@ class LargeDepositor {
         return AFM; 
     }
 
+    String getFirstName() { 
+        return firstName; 
+    }
+
+    String getLastName() { 
+        return lastName; 
+    }
+
     double getSavings() { 
         return savings; 
     }
