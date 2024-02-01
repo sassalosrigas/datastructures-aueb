@@ -109,7 +109,7 @@ class RandomizedBST implements TaxEvasionInterface {
             System.out.println("Error: Depositor with AFM " + AFM + " does not exist.");
             System.exit(1);
         } else {
-            depositor.setSavings(depositor.getSavings()+savings);
+            depositor.setSavings(savings);
         }
     }
 
