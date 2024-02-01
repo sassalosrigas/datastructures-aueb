@@ -220,9 +220,170 @@ class RandomizedBST implements TaxEvasionInterface {
         }
     }
 
-    
+    public double getMeanSavings() {
+        if (root == null) {
+            return 0.0;
+        }
 
-    
+        SumAndCount result = new SumAndCount();
+        calculateSumAndCount(root, result);
+
+        if (result.count == 0) {
+            return 0.0;
+        }
+
+        return result.sum / result.count;
+    }
+
+    private void calculateSumAndCount(TreeNode node, SumAndCount result) {
+        if (node != null) {
+            calculateSumAndCount(node.left, result);
+            result.sum += node.item.getSavings();
+            result.count++;
+            calculateSumAndCount(node.right, result);
+        }
+    }
+
+    private class SumAndCount {
+        double sum;
+        int count;
+    }
+
+    public void printΤopLargeDepositors(int k) {
+        if (root == null) {
+            System.out.println("Error: Tree is empty.");
+            return;
+        }
+
+        PQ topDepositors = new PQ(k);
+
+        traverseAndPopulatePQ(root, topDepositors, k);
+
+        System.out.println("Top " + k + " large depositors:");
+        while (!topDepositors.isEmpty()) {
+            System.out.println(topDepositors.getmin());
+        }
+    }
+
+    private void traverseAndPopulatePQ(TreeNode node, PQ topDepositors, int k) {
+        if (node != null) {
+            traverseAndPopulatePQ(node.left, topDepositors, k);
+        }
+
+        if (topDepositors.size() < k) {
+            topDepositors.offer(node.item);
+        } else {
+            LargeDepositor lowestScoreDepositor = topDepositors.peek();
+            if (compareSuspicionScore(node.item, lowestScoreDepositor) > 0) {
+                topDepositors.poll();
+                topDepositors.offer(node.item);
+            }
+        }
+
+        traverseAndPopulatePQ(node.right, topDepositors, k);
+    }
+
+    private int compareSuspicionScore(LargeDepositor depositor1, LargeDepositor depositor2) {
+        if (depositor1.getTaxedIncome() < 8000 && depositor2.getTaxedIncome() < 8000) {
+            return Double.compare(Double.MAX_VALUE, Double.MAX_VALUE);
+        } else {
+            double score1 = depositor1.getSavings() - depositor1.getTaxedIncome();
+            double score2 = depositor2.getSavings() - depositor2.getTaxedIncome();
+            return Double.compare(score1, score2);
+        }
+    }
+
+    public void printByAFM() {
+        if (root == null) {
+            System.out.println("Tree is empty.");
+        } else {
+            System.out.println("Printing tree by AFM:");
+            inOrderTraversal(root);
+        }
+    }
+
+    private void inOrderTraversal(TreeNode node) {
+        if (node != null) {
+            inOrderTraversal(node.left);
+            System.out.println(node.item);
+            inOrderTraversal(node.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        RandomizedBST tree = new RandomizedBST();
+
+        while(true) {
+            System.out.println("Menu:");
+            System.out.println("1. Insert Large Depositor");
+            System.out.println("2. Load Large Depositors from file");
+            System.out.println("3. Update savings of Large Depositor");
+            System.out.println("4. Search Large Depositor by AFM");
+            System.out.println("5. Search Large Depositors by last name");
+            System.out.println("6. Remove Large Depositor by AFM");
+            System.out.println("7. Get mean savings");
+            System.out.println("8. Print top Large Depositors");
+            System.out.println("9. Print Large Depositors by AFM");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter AFM, first name, last name, savings, taxed income:");
+                    int AFM = scanner.nextInt();
+                    scanner.nextLine();
+                    String firstName = scanner.nextLine();
+                    String lastName = scanner.nextLine();
+                    double savings = scanner.nextDouble();
+                    double taxedIncome = scanner.nextDouble();
+                    LargeDepositor depositor = new LargeDepositor(AFM, firstName, lastName, savings, taxedIncome);
+                    tree.insert(depositor);
+                    break;
+                case 2:
+                    System.out.println("Enter filename:");
+                    String filename = scanner.nextLine();
+                    tree.load(filename);
+                    break;
+                case 3:
+                    System.out.println("Enter AFM and savings:");
+                    AFM = scanner.nextInt();
+                    savings = scanner.nextDouble();
+                    tree.updateSavings(AFM, savings);
+                    break;
+                case 4:
+                    System.out.println("Enter AFM:");
+                    AFM = scanner.nextInt();
+                    tree.searchByAFM(AFM);
+                    break;
+                case 5:
+                    System.out.println("Enter last name:");
+                    lastName = scanner.nextLine();
+                    tree.searchByLastName(lastName);
+                    break;
+                case 6:
+                    System.out.println("Enter AFM:");
+                    AFM = scanner.nextInt();
+                    tree.remove(AFM);
+                    break;
+                case 7:
+                    System.out.println("Mean savings: " + tree.getMeanSavings());
+                    break;
+                case 8:
+                    System.out.println("Enter k:");
+                    int k = scanner.nextInt();
+                    tree.printΤopLargeDepositors(k);
+                    break;
+                case 9:
+                    tree.printByAFM();
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
+    }    
 
 
 

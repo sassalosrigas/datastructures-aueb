@@ -44,4 +44,14 @@ class LargeDepositor {
     public String toString() {
         return String.format("%d %s %s %.2f %.2f", AFM, firstName, lastName, savings, taxedIncome);
     }
+
+    public int compareTo(LargeDepositor other) {
+        if (this.savings < other.savings) {
+            return -1;
+        } else if (this.savings > other.savings) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

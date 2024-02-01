@@ -1,5 +1,4 @@
-import java.util.List;
-
+// Purpose: interface for TaxEvasion class
 public interface TaxEvasionInterface {
     void insert(LargeDepositor item);
     void load(String filename);
