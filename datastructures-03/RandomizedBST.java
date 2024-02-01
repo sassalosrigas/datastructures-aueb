@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-import javax.swing.tree.TreeNode;
-
 class RandomizedBST implements TaxEvasionInterface {
     private class TreeNode {
         public TreeNode(LargeDepositor item) {
